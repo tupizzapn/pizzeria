@@ -1,0 +1,32 @@
+# Denegar acceso a la carpeta includes/
+<Directory /var/www/html/proyecto/includes>
+    Order Allow,Deny
+    Deny from All
+</Directory>
+
+# Denegar acceso a la carpeta sql/
+<Directory /var/www/html/proyecto/sql>
+    Order Allow,Deny
+    Deny from All
+</Directory>
+
+# Denegar acceso a la carpeta controllers/
+<Directory /var/www/html/proyecto/controllers>
+    Order Allow,Deny
+    Deny from All
+</Directory>
+
+# Evitar que se listen los archivos de un directorio
+Options -Indexes
+
+# Proteger archivos específicos (opcional)
+<FilesMatch "\.(sql|db|config|htaccess)$">
+    Order Allow,Deny
+    Deny from All
+</FilesMatch>
+
+# Redirigir errores 404 a una página personalizada
+ErrorDocument 404 /views/404.php
+
+# Redirigir errores 403 a una página personalizada
+ErrorDocument 403 /views/403.php

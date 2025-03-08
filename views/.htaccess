@@ -1,0 +1,14 @@
+# Denegar acceso a archivos PHP en la carpeta views/
+<Files *.php>
+    Order Allow,Deny
+    Deny from All
+</Files>
+
+# Permitir acceso solo a index.php, pedidos.php, etc.
+<FilesMatch "^(index|pedidos|realizar_pedido|resumen_pedido)\.php$">
+    Order Allow,Deny
+    Allow from All
+</FilesMatch>
+
+# Evitar que se listen los archivos de un directorio
+Options -Indexes

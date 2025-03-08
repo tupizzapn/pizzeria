@@ -1,0 +1,16 @@
+# Habilitar reescritura de URLs
+RewriteEngine On
+
+# Redirigir todas las solicitudes a index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+
+# Evitar que se listen los archivos de un directorio
+Options -Indexes
+
+# Proteger archivos específicos (opcional)
+<FilesMatch "\.(htaccess|env)$">
+    Order Allow,Deny
+    Deny from All
+</FilesMatch>

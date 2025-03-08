@@ -1,0 +1,7 @@
+# Evitar que los archivos CSS se ejecuten como PHP
+<Files *.css>
+    SetHandler None
+</Files>
+
+# Evitar que se listen los archivos de un directorio
+Options -Indexes
