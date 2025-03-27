@@ -1,63 +1,67 @@
 <?php
 session_start();
 include __DIR__ . '/../includes/config.php'; // Incluir config.php
+include __DIR__ . '/../includes/db.php'; // Incluir conexión a la base de datos
 
+// Verificar si el usuario ha iniciado sesión
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . BASE_URL . '/controllers/login.php'); // Ruta corregida
+    header('Location: ' . BASE_URL . '/controllers/login.php'); // Redirigir al login
     exit();
 }
 
+// Verificar si el usuario tiene el rol de vendedor
 if ($_SESSION['rol'] !== 'vendedor') {
-    echo "Acceso denegado. Solo los vendedores pueden ver pedidos.";
+    echo "Acceso denegado. Solo los vendedores pueden ver los pedidos.";
     exit();
 }
 
-include __DIR__ . '/../includes/db.php'; // Ruta corregida
+// Obtener la fecha actual
+$fecha_actual = date('Y-m-d');
 
-// Obtener la lista de pedidos con los datos del cliente
-$pedidos = $conn->query("
-    SELECT p.id, p.fecha_pedido, p.total, c.nombre AS nombre_cliente, c.telefono 
+// Obtener los pedidos no procesados del día (que no están en la tabla ventas)
+$query = "
+    SELECT p.* 
     FROM pedidos p
-    JOIN clientes c ON p.cliente_id = c.id
+    LEFT JOIN ventas v ON p.id = v.pedido_id
+    WHERE v.pedido_id IS NULL AND DATE(p.fecha_pedido) = :fecha_actual
     ORDER BY p.fecha_pedido DESC
-")->fetchAll(PDO::FETCH_ASSOC);
+";
+$stmt = $conn->prepare($query);
+$stmt->execute(['fecha_actual' => $fecha_actual]);
+$pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos</title>
-    <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/styles.css"> <!-- Ruta corregida -->
+    <title>Pedidos Pendientes</title>
 </head>
 <body>
-    <h1>Pedidos</h1>
-    <p>Bienvenido, <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>! 
-       <a href="<?php echo BASE_URL; ?>/controllers/logout.php">Cerrar sesión</a> <!-- Ruta corregida -->
-    </p>
-
-    <!-- Botón para volver al menú principal -->
-    <a href="<?php echo BASE_URL; ?>/views/index.php" class="btn">Volver al Menú Principal</a> <!-- Ruta corregida -->
-
-    <h2>Lista de Pedidos</h2>
-    <table>
+    <h1>Pedidos Pendientes del Día</h1>
+    <a href="pedidos_procesados.php">Ver Pedidos Procesados</a>
+    <table border="1">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Fecha</th>
                 <th>Cliente</th>
-                <th>Teléfono</th>
+                <th>Fecha</th>
                 <th>Total</th>
+                <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($pedidos as $pedido): ?>
                 <tr>
                     <td><?php echo htmlspecialchars($pedido['id'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($pedido['cliente_id'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($pedido['fecha_pedido'], ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($pedido['nombre_cliente'], ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($pedido['telefono'], ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td>$<?php echo number_format($pedido['total'], 2); ?></td>
+                    <td>$<?php echo htmlspecialchars($pedido['total'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td><?php echo htmlspecialchars($pedido['estado'], ENT_QUOTES, 'UTF-8'); ?></td>
+                    <td>
+                        <a href="asignar_delivery.php?id=<?php echo $pedido['id']; ?>">Asignar Delivery</a>
+                    </td>
                 </tr>
             <?php endforeach; ?>
         </tbody>

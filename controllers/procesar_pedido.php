@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pizzas = $_POST['pizzas']; // Array de pizzas seleccionadas
 
     // Verificar que todos los campos estén presentes y no estén vacíos
-    if (empty($nombre_cliente) || empty($telefono_cliente) || empty($pizzas)) {
+    if (empty($telefono_cliente) || empty($pizzas)) {
         echo "<h1>Error: Todos los campos son obligatorios.</h1>";
         exit();
     }

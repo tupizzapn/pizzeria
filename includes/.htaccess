@@ -1,0 +1,10 @@
+# Denegar acceso a config.php
+<Files config.php>
+    Order Allow,Deny
+    Deny from all
+</Files>
+# Denegar acceso a db.php
+<Files db.php>
+    Order Allow,Deny
+    Deny from all
+</Files>

@@ -1,6 +1,3 @@
-# Habilitar reescritura de URLs
-RewriteEngine On
-
 # Redirigir todas las solicitudes a index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
@@ -14,3 +11,6 @@ Options -Indexes
     Order Allow,Deny
     Deny from All
 </FilesMatch>
+
+# Reglas para la API de verificación de usuarios
+RewriteRule ^verificar-usuario$ api.php [L]

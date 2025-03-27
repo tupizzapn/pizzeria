@@ -1,0 +1,11 @@
+# Denegar acceso a la carpeta includes
+<FilesMatch "\.(php|ini|log)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Permitir acceso solo a imágenes y CSS
+<FilesMatch "\.(jpg|jpeg|png|gif|css|js)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>

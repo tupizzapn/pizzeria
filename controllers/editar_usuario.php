@@ -85,10 +85,12 @@ try {
         <input type="text" id="username" name="username" value="<?php echo htmlspecialchars($usuario['username'], ENT_QUOTES, 'UTF-8'); ?>" required>
 
         <label for="rol">Rol:</label>
-        <select id="rol" name="rol" required>
-            <option value="admin" <?php echo ($usuario['rol'] === 'admin') ? 'selected' : ''; ?>>Admin</option>
-            <option value="vendedor" <?php echo ($usuario['rol'] === 'vendedor') ? 'selected' : ''; ?>>Vendedor</option>
-        </select>
+<select id="rol" name="rol" required>
+    <option value="admin" <?php echo ($usuario['rol'] === 'admin') ? 'selected' : ''; ?>>Admin</option>
+    <option value="vendedor" <?php echo ($usuario['rol'] === 'vendedor') ? 'selected' : ''; ?>>Vendedor</option>
+    <option value="pizzero" <?php echo ($usuario['rol'] === 'pizzero') ? 'selected' : ''; ?>>Pizzero</option>
+    <option value="delivery" <?php echo ($usuario['rol'] === 'delivery') ? 'selected' : ''; ?>>Delivery</option>
+</select>
 
         <button type="submit">Guardar Cambios</button>
     </form>

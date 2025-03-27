@@ -1,0 +1,431 @@
+/* Estilos generales */
+html {
+  font-size: 16px;
+}
+/*****************************************GENERAL*/
+body, .contenedor-principal, .contenedor_menu, .contenedor_tabla {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+body {
+  overflow: hidden;
+}
+
+/*******************************************************************/
+/*********************************************gestion_usuario*/
+
+/* Contenedor de la tabla */
+.contenedor_tabla {
+  background-size: cover;
+  background-position: center;
+  display: grid;
+  grid-template-columns: 0.5fr 2fr 0.5fr;
+  grid-template-rows: 0.1fr 3.4fr 0.5fr;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 20px;
+}
+
+.tabla_menu {
+
+
+
+}
+
+/* Formulario */
+.nuevo_ingreso {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.nuevo_ingreso label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.nuevo_ingreso input,
+.nuevo_ingreso select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.nuevo_ingreso button {
+  grid-column: span 2;
+  padding: 10px;
+  background-color: #513a26;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.nuevo_ingreso button:hover {
+  background-color: #2c3e50;
+}
+
+/* Tabla */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0px;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+table th {
+  background-color: #513a26;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+}
+
+table a {
+  color: #182333;
+  text-decoration: none;
+  margin-right: 10px;
+}
+
+table a:hover {
+  text-decoration: underline;
+}
+
+/* Tipografía */
+.titulo_font h1 {
+  font-family: 'Lugrasimo', cursive;
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: #182333;
+}
+
+.titulo_font h2 {
+  font-family: 'Indie Flower', cursive;
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #182333;
+}
+
+.titulo_font p {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: #182333;
+}
+
+
+/* Responsividad 
+@media (max-width: 768px) {
+  .nuevo_ingreso {
+      grid-template-columns: 1fr;
+  }
+
+  .nuevo_ingreso button {
+      grid-column: span 1;
+  }
+
+  .tabla {
+      padding: 10px;
+  }
+
+  .titulo_font h1 {
+      font-size: 2rem;
+  }
+
+  .titulo_font h2 {
+      font-size: 1.5rem;
+  }
+}
+*/
+
+
+/*****************************************************/
+/*****************************************index*/
+.contenedor_menu {
+  margin: 0px;
+  padding: 0px;
+  display: grid;
+  grid-template-rows: 1.1fr 2.8fr 0.9fr;
+  grid-template-columns: 0.7fr 3fr 0.6fr;
+  }
+
+.menu {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 2%;
+  gap: 10px;
+  margin-top:15dvh;
+  }
+  .menu_vertical {
+    list-style:none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Espaciado entre ítems */
+    }
+  .menu_vertical li a {
+    text-decoration: none;
+    color: #341C19;
+    font-family: 'Indie Flower', cursive;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 1.7rem;
+    }
+  .menu_vertical li {
+    margin: 10px 0;
+    padding-left: 30px;
+    position: relative;
+    }
+    .menu_vertical li::before {
+    content: attr(data-icon); /* Usa el valor del atributo data-icon */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 10px;
+    }
+ 
+.logo {
+  height: 20%;
+}  
+.logo img {
+  max-width: 100%;
+  max-height: 100%;
+
+}
+
+.contenedor-principal {
+  margin: 0px;
+  padding: 0px;
+  display: grid;
+  grid-template-rows: repeat(4, 1fr);
+  grid-template-columns: 1fr 1.5fr 1fr;
+  position: relative;
+}
+
+.contenedor-principal::before {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  background: linear-gradient(
+    to bottom, 
+    rgba(180, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.8)
+  );
+  z-index: 1;
+}
+
+.contenedor-principal > * {
+  position: relative;
+  z-index: 2;
+}
+/***********************************************GRID LOGO*/
+.grid_logo {
+  grid-row-start: 1;
+  grid-row-end: 3;
+  grid-column-start: 2;
+  grid-column-end: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid_logo img {
+  max-width: 100%;
+  max-height: 100%;
+}
+/************************************************GRID ITEM*/
+.grid_item {
+  grid-row-start: 4;
+  grid-row-end: 5;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  background-color: #baa159;
+  height: 30%;
+  width: 75%;
+  justify-self: center;
+  border-radius: 1dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.6s ease;
+  transform: border-radius;
+}
+/************************************************ BOTON BIENVENIDA*/
+.boton-bienvenida {
+  width: 90%;
+  height: 90%;
+  font-size: 2rem;
+  color: white;
+  background-color: #d32f2f;
+  border: none;
+  border-radius: 1dvh;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.6s ease;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.boton-bienvenida span {
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.boton-bienvenida::after {
+  content: 'Login';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #DE0989;
+  border-radius: 1dvh;
+  transform: rotateY(180deg);
+  backface-visibility:visible;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.boton-bienvenida:hover {
+  background-color: #b71c1c;
+}
+
+.boton-bienvenida.volteado {
+  transform: rotateY(180deg);
+}
+
+.boton-bienvenida.volteado span {
+  opacity: 0;
+}
+
+.boton-bienvenida.volteado::after {
+  opacity: 1;
+}
+/********************************************FORMULARIO LOGIN*/
+.formulariologin {
+  grid-row-start: 3;
+  grid-row-end: 4;
+  grid-column-start: 1;
+  grid-column-end: 5;
+  justify-self: center;
+  align-self: end;
+  margin-top: 12%;
+  border-radius: 1dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 75%;
+  height: 0;
+  background-color: #baa159;
+  transition: height 0.5s ease;
+  transform-origin: bottom;
+  overflow: hidden;
+  transform: translateY(12px);
+}
+
+.formulariologin.active {
+  height: 80%;
+}
+
+/* Estilos para el formulario */
+.formulariologin form {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Estilos para los grupos de formulario */
+.formulariologin .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* Estilos para las etiquetas */
+.formulariologin label {
+  font-size: 1.2rem;
+  color: white;
+}
+
+/* Estilos para los inputs */
+.formulariologin input {
+  padding: 10px;
+  border: none;
+  border-radius: 0.5dvh;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.3s ease;
+}
+
+.formulariologin input:focus {
+  background-color: white;
+  outline: none;
+}
+
+/* Estilos para el botón de login */
+.formulariologin .btn-login {
+  padding: 10px;
+  border: none;
+  border-radius: 0.5dvh;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #d32f2f;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.formulariologin .btn-login:hover {
+  background-color: #b71c1c;
+}
+
+/* Estilos para el mensaje de error */
+.formulariologin .alert-error {
+  padding: 10px;
+  border-radius: 0.5dvh;
+  background-color: #ff4444;
+  color: white;
+  text-align: center;
+  font-size: 1rem;
+}
+
+

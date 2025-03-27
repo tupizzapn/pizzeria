@@ -32,7 +32,7 @@ $toppings = $conn->query("SELECT * FROM toppings")->fetchAll(PDO::FETCH_ASSOC);
         <!-- Datos del cliente -->
         <h2>Datos del Cliente</h2>
         <label for="nombre_cliente">Nombre:</label>
-        <input type="text" id="nombre_cliente" name="nombre_cliente" required>
+        <input type="text" id="nombre_cliente" name="nombre_cliente" >
 
         <label for="telefono_cliente">Teléfono:</label>
         <input type="text" id="telefono_cliente" name="telefono_cliente" required>
