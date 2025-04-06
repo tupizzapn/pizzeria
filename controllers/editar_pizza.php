@@ -1,74 +1,88 @@
 <?php
-session_start();
-include __DIR__ . '/../includes/config.php'; // Incluir config.php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['user_id'])) {
+require __DIR__ . '/../includes/config.php';
+require __DIR__ . '/../includes/db.php';
+
+if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== 'admin') {
     header('Location: ' . BASE_URL . '/controllers/login.php');
     exit();
 }
 
-// Verificar si el usuario tiene el rol de administrador
-if ($_SESSION['rol'] !== 'admin') {
-    echo "Acceso denegado. Solo los administradores pueden editar pizzas.";
-    exit();
-}
-
-include __DIR__ . '/../includes/db.php'; // Incluir conexión a la base de datos
-
-// Procesar el formulario de edición
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Validar y sanitizar los datos del formulario
-    $id = filter_input(INPUT_POST, 'id', FILTER_SANITIZE_NUMBER_INT);
-    $nombre = filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING);
-    $tamaño = filter_input(INPUT_POST, 'tamaño', FILTER_SANITIZE_STRING);
-    $precio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
-
-    // Verificar que todos los campos estén presentes y no estén vacíos
-    if (empty($id) || empty($nombre) || empty($tamaño) || empty($precio)) {
-        echo "<h1>Error: Todos los campos son obligatorios.</h1>";
-        exit();
-    }
-
-    try {
-        // Actualizar la pizza en la base de datos
-        $stmt = $conn->prepare("UPDATE pizzas SET nombre = ?, tamaño = ?, precio = ? WHERE id = ?");
-        $stmt->execute([$nombre, $tamaño, $precio, $id]);
-
-        // Redirigir a la página de gestión de pizzas
-        header('Location: ' . BASE_URL . '/controllers/gestionar.php');
-        exit();
-    } catch (PDOException $e) {
-        // Mostrar un mensaje de error detallado
-        echo "<h1>Error al editar pizza</h1>";
-        echo "<p>Por favor, intenta nuevamente. Si el problema persiste, contacta al soporte.</p>";
-        echo "<p>Detalles del error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</p>";
-    }
-}
-
-// Obtener el ID de la pizza desde la URL
-$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+$id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) {
-    echo "<h1>Error: ID de pizza no válido.</h1>";
+    $_SESSION['error'] = "ID de pizza no válido";
+    header('Location: ' . BASE_URL . '/controllers/gestionar_pizzas.php');
     exit();
 }
 
-// Obtener los datos de la pizza
 try {
-    $stmt = $conn->prepare("SELECT * FROM pizzas WHERE id = ?");
+    $stmt = $conn->prepare("SELECT * FROM pizzas WHERE id = ? AND activo = TRUE");
     $stmt->execute([$id]);
     $pizza = $stmt->fetch(PDO::FETCH_ASSOC);
-
+    
     if (!$pizza) {
-        echo "<h1>Error: No se encontró la pizza.</h1>";
+        $_SESSION['error'] = "Pizza no encontrada o inactiva";
+        header('Location: ' . BASE_URL . '/controllers/gestionar_pizzas.php');
         exit();
     }
+} catch (PDOException $e) {
+    die("Error al obtener pizza: " . $e->getMessage());
 }
-catch (PDOException $e) {
-    echo "<h1>Error al obtener los datos de la pizza</h1>";
-    echo "<p>Por favor, intenta nuevamente. Si el problema persiste, contacta al soporte.</p>";
-    echo "<p>Detalles del error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</p>";
-    exit();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING));
+    $tamaño = filter_input(INPUT_POST, 'tamaño', FILTER_SANITIZE_STRING);
+    $precio = filter_input(INPUT_POST, 'precio', FILTER_SANITIZE_STRING);
+    $precio = str_replace(',', '.', $precio);
+    $precio = filter_var($precio, FILTER_VALIDATE_FLOAT, [
+        'options' => [
+            'decimal' => '.',
+            'min_range' => 0.01
+        ]
+    ]);
+
+    $errores = [];
+
+    if (empty($nombre) || strlen($nombre) < 3) {
+        $errores[] = "Nombre debe tener al menos 3 caracteres";
+    }
+    
+    if (!in_array($tamaño, ['Familiar', 'Pequeña'])) {
+        $errores[] = "Tamaño no válido";
+    }
+    
+    if ($precio === false) {
+        $errores[] = "Precio debe ser un número válido mayor a 0.01";
+    }
+
+    if (empty($errores)) {
+        try {
+            $stmt = $conn->prepare("SELECT id FROM pizzas WHERE nombre = ? AND tamaño = ? AND id != ?");
+            $stmt->execute([$nombre, $tamaño, $id]);
+            
+            if ($stmt->fetch()) {
+                $errores[] = "Ya existe una pizza con este nombre y tamaño";
+            } else {
+                $stmt = $conn->prepare(
+                    "UPDATE pizzas SET 
+                     nombre = ?, 
+                     tamaño = ?, 
+                     precio = ? 
+                     WHERE id = ?"
+                );
+                $stmt->execute([$nombre, $tamaño, $precio, $id]);
+                
+                $_SESSION['exito'] = "Pizza actualizada correctamente";
+                header('Location: ' . BASE_URL . '/controllers/gestionar_pizzas.php?mostrar=lista');
+                exit();
+            }
+        } catch (PDOException $e) {
+            $errores[] = "Error de base de datos: " . $e->getMessage();
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -77,25 +91,70 @@ catch (PDOException $e) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Pizza</title>
-    <link rel="stylesheet" href="<?php echo CSS_DIR; ?>/styles.css"> <!-- Ruta corregida -->
+    <link rel="stylesheet" href="<?= CSS_URL ?>/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lugrasimo&display=swap" rel="stylesheet">
+    <style>
+    .contenedor_tabla {
+        background-image: url('<?= IMG_URL ?>/backgrounds/background_sm.jpg');
+    }
+    </style>
 </head>
 <body>
-    <h1>Editar Pizza</h1>
-    <form action="<?php echo BASE_URL; ?>/controllers/editar_pizza.php" method="POST">
-        <input type="hidden" name="id" value="<?php echo htmlspecialchars($pizza['id'], ENT_QUOTES, 'UTF-8'); ?>">
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre" value="<?php echo htmlspecialchars($pizza['nombre'], ENT_QUOTES, 'UTF-8'); ?>" required>
+    <div class="contenedor_tabla">
+        <div class="tabla">
+            <div class="titulo_font">
+                <h1>Editar Pizza</h1>
+                <a href="<?= BASE_URL ?>/controllers/gestionar_pizzas.php" class="btn-regresar">← Regresar</a>
+                
+                <?php if (!empty($errores)): ?>
+                    <div class="alert alert-error">
+                        <?php foreach ($errores as $error): ?>
+                            <p><?= htmlspecialchars($error) ?></p>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
 
-        <label for="tamaño">Tamaño:</label>
-        <select id="tamaño" name="tamaño" required>
-            <option value="Familiar" <?php echo ($pizza['tamaño'] === 'Familiar') ? 'selected' : ''; ?>>Familiar</option>
-            <option value="Pequeña" <?php echo ($pizza['tamaño'] === 'Pequeña') ? 'selected' : ''; ?>>Pequeña</option>
-        </select>
-
-        <label for="precio">Precio:</label>
-        <input type="number" id="precio" name="precio" step="0.01" value="<?php echo htmlspecialchars($pizza['precio'], ENT_QUOTES, 'UTF-8'); ?>" required>
-
-        <button type="submit">Guardar Cambios</button>
-    </form>
+            <div class="contenedor-edicion">
+                <form method="POST" id="formPizza">
+                    <input type="hidden" name="id" value="<?= htmlspecialchars($pizza['id']) ?>">
+                    
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" name="nombre" 
+                               value="<?= htmlspecialchars($pizza['nombre']) ?>" 
+                               required minlength="3">
+                        <div class="error-msg" id="nombre-error"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tamaño">Tamaño:</label>
+                        <select id="tamaño" name="tamaño" required>
+                            <option value="Familiar" <?= $pizza['tamaño'] === 'Familiar' ? 'selected' : '' ?>>Familiar</option>
+                            <option value="Pequeña" <?= $pizza['tamaño'] === 'Pequeña' ? 'selected' : '' ?>>Pequeña</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="precio">Precio:</label>
+                        <input type="text" id="precio" name="precio"
+                               class="precio-input"
+                               value="<?= number_format($pizza['precio'], 2, '.', '') ?>"
+                               placeholder="0.00"
+                               required
+                               data-decimales="2">
+                        <div class="error-msg" id="precio-error"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn-guardar">Guardar Cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        const API_BASE_URL = '<?= BASE_URL ?>/controllers';
+        const PIZZA_ID = '<?= $pizza['id'] ?>';
+    </script>
+    <script src="<?= JS_URL ?>/gestion_pizza.js"></script>
 </body>
 </html>

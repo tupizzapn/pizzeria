@@ -2,29 +2,105 @@
 session_start();
 header('Content-Type: application/json');
 
-include __DIR__ . '/../includes/config.php';
+// Verificar si la constante BASE_URL está definida
+if (!defined('BASE_URL')) {
+    include __DIR__ . '/../includes/config.php';
+}
+
 include __DIR__ . '/../includes/db.php';
 
-// Verificación de sesión y rol
-if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== 'admin') {
-    http_response_code(403);
-    die(json_encode(['error' => 'Acceso no autorizado']));
+// Verificación de sesión y rol mejorada
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['error' => 'No autenticado']);
+    exit();
 }
 
+if ($_SESSION['rol'] !== 'admin') {
+    echo json_encode(['error' => 'Acceso no autorizado']);
+    exit();
+}
+
+// Procesamiento de la solicitud
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['username'])) {
     try {
-        $username = filter_input(INPUT_GET, 'username', FILTER_SANITIZE_STRING);
-        $stmt = $conn->prepare("SELECT id FROM usuarios WHERE username = ?");
-        $stmt->execute([$username]);
+        $username = trim($_GET['username']);
+        $excludeId = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : null;
+        
+        if (empty($username)) {
+            echo json_encode(['error' => 'Nombre de usuario requerido']);
+            exit();
+        }
+
+        $query = "SELECT id FROM usuarios WHERE username = ?";
+        $params = [$username];
+        
+        if ($excludeId) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute($params);
         
         echo json_encode([
-            'existe' => $stmt->fetch(PDO::FETCH_ASSOC) ? true : false
+            'existe' => (bool)$stmt->fetch(),
+            'valid' => true
         ]);
     } catch (PDOException $e) {
-        http_response_code(500);
         echo json_encode(['error' => 'Error en la base de datos']);
     }
-} else {
-    http_response_code(400);
+} 
+// Agregar después de la sección de usuarios en api.php
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['nombre_pizza'])) {
+    try {
+        $nombre = trim($_GET['nombre_pizza']);
+        $tamaño = trim($_GET['tamaño_pizza']);
+        $excludeId = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : null;
+        
+        $query = "SELECT id FROM pizzas WHERE nombre = ? AND tamaño = ?";
+        $params = [$nombre, $tamaño];
+        
+        if ($excludeId) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute($params);
+        
+        echo json_encode([
+            'existe' => (bool)$stmt->fetch(),
+            'valid' => true
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error en la base de datos']);
+    }
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['nombre_topping'])) {
+    try {
+        $nombre = trim($_GET['nombre_topping']);
+        $excludeId = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : null;
+        
+        $query = "SELECT id FROM toppings WHERE nombre = ?";
+        $params = [$nombre];
+        
+        if ($excludeId) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute($params);
+        
+        echo json_encode([
+            'existe' => (bool)$stmt->fetch(),
+            'valid' => true
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error en la base de datos']);
+    }
+}
+else {
     echo json_encode(['error' => 'Solicitud inválida']);
 }
+?>

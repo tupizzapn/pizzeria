@@ -1,40 +1,69 @@
 <?php
 session_start();
-include __DIR__ . '/../includes/config.php'; // Incluir config.php
+include __DIR__ . '/../includes/config.php';
+include __DIR__ . '/../includes/db.php';
 
-// Verificar si el usuario ha iniciado sesión
-if (!isset($_SESSION['user_id'])) {
+// Verificación de sesión y rol
+if (!isset($_SESSION['user_id']) || $_SESSION['rol'] !== 'admin') {
     header('Location: ' . BASE_URL . '/controllers/login.php');
     exit();
 }
 
-// Verificar si el usuario tiene el rol de administrador
-if ($_SESSION['rol'] !== 'admin') {
-    echo "Acceso denegado. Solo los administradores pueden eliminar usuarios.";
-    exit();
-}
-
-include __DIR__ . '/../includes/db.php'; // Incluir conexión a la base de datos
-
 // Validar y sanitizar el ID del usuario
 $id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
 if (!$id) {
-    echo "<h1>Error: ID de usuario no válido.</h1>";
+    $_SESSION['error'] = "ID de usuario no válido";
+    header('Location: ' . BASE_URL . '/controllers/gestionar_usuarios.php');
     exit();
 }
 
 try {
-    // Eliminar el usuario de la base de datos
-    $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
+    // Verificar si el usuario está siendo usado en otras tablas
+    $usadoEnOtrasTablas = false;
+    $tablasReferenciadas = [];
+    
+    // Verificar en tabla pizzero
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM pizzero WHERE usuario_id = ?");
     $stmt->execute([$id]);
-
-    // Redirigir a la página de gestión de usuarios
+    if ($stmt->fetchColumn() > 0) {
+        $usadoEnOtrasTablas = true;
+        $tablasReferenciadas[] = 'pizzero';
+    }
+    
+    // Verificar en tabla delivery
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM delivery WHERE usuario_id = ?");
+    $stmt->execute([$id]);
+    if ($stmt->fetchColumn() > 0) {
+        $usadoEnOtrasTablas = true;
+        $tablasReferenciadas[] = 'delivery';
+    }
+    
+    // Verificar en tabla ventas
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM ventas WHERE pizzero_id = ? OR delivery_id = ?");
+    $stmt->execute([$id, $id]);
+    if ($stmt->fetchColumn() > 0) {
+        $usadoEnOtrasTablas = true;
+        $tablasReferenciadas[] = 'ventas';
+    }
+    
+    // Realizar borrado lógico
+    $stmt = $conn->prepare("UPDATE usuarios SET activo = FALSE, fecha_eliminacion = NOW() WHERE id = ?");
+    $stmt->execute([$id]);
+    
+    if ($usadoEnOtrasTablas) {
+        $_SESSION['advertencia'] = "Usuario marcado como inactivo. Referencias encontradas en: " . 
+                                 implode(', ', $tablasReferenciadas) . 
+                                 ". Los registros históricos se mantienen.";
+    } else {
+        $_SESSION['exito'] = "Usuario marcado como inactivo correctamente";
+    }
+    
     header('Location: ' . BASE_URL . '/controllers/gestionar_usuarios.php');
     exit();
+
 } catch (PDOException $e) {
-    // Mostrar un mensaje de error detallado
-    echo "<h1>Error al eliminar usuario</h1>";
-    echo "<p>Por favor, intenta nuevamente. Si el problema persiste, contacta al soporte.</p>";
-    echo "<p>Detalles del error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</p>";
+    $_SESSION['error'] = "Error al desactivar usuario: " . $e->getMessage();
+    header('Location: ' . BASE_URL . '/controllers/gestionar_usuarios.php');
+    exit();
 }
 ?>

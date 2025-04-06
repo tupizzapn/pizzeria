@@ -1,19 +1,51 @@
-# Sistema de Pizzería
+# Sistema de Gestión para Pizzería 🍕
 
-Este es un sistema de gestión de pedidos para una pizzería. Permite a los clientes realizar pedidos, gestionar usuarios y administrar pizzas y toppings.
+Sistema completo para administrar pedidos, usuarios y productos de una pizzería, con roles diferenciados y flujo de trabajo optimizado.
 
-## 🚀 Instalación
+## 🌟 Características Principales
+- Gestión completa de pedidos (creación, seguimiento, confirmación)
+- Administración de usuarios con 4 roles diferentes
+- Catálogo de pizzas y toppings personalizables
+- Sistema de asignación de personal (pizzero/delivery)
+- Integración con WhatsApp para comunicación con clientes
+- Interfaz intuitiva y responsive
 
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/tu-usuario/pizzeria.git
+## 🛠 Tecnologías Utilizadas
+| Área          | Tecnologías                 |
+|---------------|-----------------------------|
+| Frontend      | HTML5, CSS3, JavaScript ES6 |
+| Backend       | PHP 8+                      |
+| Base de Datos | MySQL 8                     |
+| Servidor      | Apache HTTP Server          |
+| Desarrollo    | Visual Studio Code          |
 
-# Tecnologias utilizadas
-Visual code Studio
-PHP
-MySQL
-HTML/CSS/JavaScript
-Apache (servidor web)
+## 🚀 Instalación Rápida
+
+1. Clonar repositorio:
+```bash
+git clone https://github.com/tu-usuario/pizzeria.git
+cd pizzeria
+
+Flujo de Trabajo
+
+graph TD
+    A[Consulta WhatsApp] --> B[Registro Pedido]
+    B --> C{Confirmación Cliente}
+    C -->|Sí| D[Cambio a Estado "Venta"]
+    D --> E[Asignación Delivery]
+    E --> F[Notificación a Pizzero/Delivery]
+    F --> G[Preparación y Entrega]
+    G --> H[Registro en Ventas]
+
+┌───────────┐     ┌───────────────┐     ┌─────────────────┐
+│  pedidos  │───┐ │detalles_pedido│◄──┐ │ toppings_pedido │
+└───────────┘   │ └───────────────┘   │ └─────────────────┘
+  ▲           │   ▲                 │     ▲
+  │           └───┤                 └─────┤
+┌───────────┐     └──┐                ┌───┴──────────┐
+│ clientes  │        │  ┌───────────┐ │   toppings   │
+└───────────┘        └─►│  pizzas   │─┘ └────────────┘
+                        └───────────┘
 
 # Tablas de la Base de Datos
 pedidos: Almacena los pedidos realizados.
@@ -26,6 +58,14 @@ usuarios: Usuarios del sistema (admin, vendedores, pizzero. delivery).
 delivery: informacion del personal que hace las entregas
 pizzero: Informacion del personal que realiza la pizza
 ventas: Informacion de pedidos confirmados
+
+
+Rol	Permisos
+Admin	Gestión completa del sistema
+Vendedor	Creación/modificación de pedidos
+Pizzero	Visualización de pedidos asignados
+Delivery	Acceso a información de entregas
+
 
 # Tablas del Proyecto 
 pedidos
@@ -58,18 +98,27 @@ pizzas
     |nombre
     |tamaño enum('Familiar', 'Pequeña')
     |precio
+    |activo
+    |fecha_eliminacion         
 
 toppings
     |id
     |nombre
     |precio_familiar
     |precio_pequeña
+    |activo
+    |fecha_eliminacion       
+
 
 usuarios
     |id
     |username
+    |nombre
+    |telefono        
     |password
     |rol enum(ádmin, 'vendedor', pizzero, delivery)
+    |created_at
+    |fecha_eliminacion        
 
 delivery
     |id
@@ -103,6 +152,8 @@ var/www/html/proyecto/          # Directorio raíz del proyecto
 |     |    |        |── background.png
 |     |    |        |── background_adm.jpg
 |     |    |        |── background_menu.jpg
+|     |    |        |── background_sm.jpg
+|     |    |        |── nota_sf.png
 |     |    |── icons
 |     |    |── logos
 |     |    |     |── logo.png
@@ -112,12 +163,14 @@ var/www/html/proyecto/          # Directorio raíz del proyecto
 |     |── js
 |     |    |── bienvenida.js
 |     |    |── gestion_usuario.js 
-|     |    |── gestion_usuario.js 
+|     |    |── gestion_pizza.js 
+|     |    |── gestion_topping.js 
 |     |    |── .htacces
 │     |── .htacces 
 │
 ├── controllers/                 # Controladores (no accesibles desde el navegador)
 |   ├── agregar_direccion.php
+|   |── api.php 
 |   ├── cambiar_estado_pedido.php
 │   ├── editar_pizza.php
 │   ├── editar_topping.php
@@ -125,13 +178,13 @@ var/www/html/proyecto/          # Directorio raíz del proyecto
 │   ├── eliminar_pizza.php
 │   ├── eliminar_topping.php
 │   ├── eliminar_usuario.php
+│   ├── gestionar_pizzas.php
+│   ├── gestionar_toppins.php
 │   ├── gestionar_usuario.php
-│   ├── gestionar.php
 │   ├── login.php
 │   ├── logout.php
 |   ├── procesar_asignacion.php 
 │   └── procesar_pedido.php
-|   |── api.php 
 |   └── verificar_usuario.php 
 │
 ├── views/                       # Vistas (accesibles desde el navegador)
@@ -197,4 +250,156 @@ El sistema implementa:
   ```javascript
   // Ejemplo de llamada segura
   fetch(`${API_BASE_URL}/api.php?username=${encodeURIComponent(username)}`)
- 
+
+
+  //Paquetes para integracion//
+
+ //************************************************************************//
+  config.php
+
+  <?php
+// Configuración de rutas
+define('BASE_URL', '/pizzeria'); // Cambia esto según tu entorno
+define('CONTROLLERS_DIR', __DIR__ . '/../controllers');
+define('VIEWS_DIR', __DIR__ . '/../views');
+define('CSS_DIR', __DIR__ . '/../public/css'); // Ruta actualizada para CSS
+define('IMG_DIR', __DIR__ . '/../public/img'); // Nueva ruta para imágenes
+define('INCLUDES_DIR', __DIR__);
+
+// Configuración de la base de datos
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'pizzeria');
+define('DB_USER', 'achebecerra');
+define('DB_PASSWORD', '971#$Sbas');
+
+// Configuración adicional para rutas públicas
+define('PUBLIC_URL', BASE_URL . '/public'); // URL base para archivos públicos
+define('CSS_URL', PUBLIC_URL . '/css');     // URL para archivos CSS
+define('IMG_URL', PUBLIC_URL . '/img');     // URL para imágenes
+define('JS_URL', PUBLIC_URL . '/js');     // URL para Javascript
+?>
+
+//**************************************************************************//
+ db.php
+ <?php
+include __DIR__ . '/config.php';
+
+try {
+    $conn = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    echo "Error de conexión: " . $e->getMessage();
+    exit();
+}
+?>
+
+//************************************************************************//
+api.php
+<?php
+session_start();
+header('Content-Type: application/json');
+
+// Verificar si la constante BASE_URL está definida
+if (!defined('BASE_URL')) {
+    include __DIR__ . '/../includes/config.php';
+}
+
+include __DIR__ . '/../includes/db.php';
+
+// Verificación de sesión y rol mejorada
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['error' => 'No autenticado']);
+    exit();
+}
+
+if ($_SESSION['rol'] !== 'admin') {
+    echo json_encode(['error' => 'Acceso no autorizado']);
+    exit();
+}
+
+// Procesamiento de la solicitud
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['username'])) {
+    try {
+        $username = trim($_GET['username']);
+        $excludeId = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : null;
+        
+        if (empty($username)) {
+            echo json_encode(['error' => 'Nombre de usuario requerido']);
+            exit();
+        }
+
+        $query = "SELECT id FROM usuarios WHERE username = ?";
+        $params = [$username];
+        
+        if ($excludeId) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute($params);
+        
+        echo json_encode([
+            'existe' => (bool)$stmt->fetch(),
+            'valid' => true
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error en la base de datos']);
+    }
+} 
+// Agregar después de la sección de usuarios en api.php
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['nombre_pizza'])) {
+    try {
+        $nombre = trim($_GET['nombre_pizza']);
+        $tamaño = trim($_GET['tamaño_pizza']);
+        $excludeId = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : null;
+        
+        $query = "SELECT id FROM pizzas WHERE nombre = ? AND tamaño = ?";
+        $params = [$nombre, $tamaño];
+        
+        if ($excludeId) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute($params);
+        
+        echo json_encode([
+            'existe' => (bool)$stmt->fetch(),
+            'valid' => true
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error en la base de datos']);
+    }
+}
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['nombre_topping'])) {
+    try {
+        $nombre = trim($_GET['nombre_topping']);
+        $excludeId = isset($_GET['exclude_id']) ? (int)$_GET['exclude_id'] : null;
+        
+        $query = "SELECT id FROM toppings WHERE nombre = ?";
+        $params = [$nombre];
+        
+        if ($excludeId) {
+            $query .= " AND id != ?";
+            $params[] = $excludeId;
+        }
+
+        $stmt = $conn->prepare($query);
+        $stmt->execute($params);
+        
+        echo json_encode([
+            'existe' => (bool)$stmt->fetch(),
+            'valid' => true
+        ]);
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error en la base de datos']);
+    }
+}
+else {
+    echo json_encode(['error' => 'Solicitud inválida']);
+}
+?>
+
+

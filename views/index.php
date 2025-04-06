@@ -37,8 +37,8 @@ if (!isset($_SESSION['user_id'])) {
             <nav>
             <ul class="menu_vertical">
                 <?php if ($_SESSION['rol'] === 'admin'): ?>
-                <li data-icon="🍕"><a href="<?php echo BASE_URL; ?>/controllers/gestionar.php">Pizzas</a> </li>
-                <li data-icon="🍄"><a href="<?php echo BASE_URL; ?>/controllers/gestionar.php">Toppings</a> </li>
+                <li data-icon="🍕"><a href="<?php echo BASE_URL; ?>/controllers/gestionar_pizzas.php">Pizzas</a> </li>
+                <li data-icon="🍄"><a href="<?php echo BASE_URL; ?>/controllers/gestionar_toppins.php">Toppings</a> </li>
                 <li data-icon="👤"><a href="<?php echo BASE_URL; ?>/controllers/gestionar_usuarios.php">Usuarios</a> </li>
             <?php endif; ?>
             <?php if ($_SESSION['rol'] === 'vendedor'): ?>

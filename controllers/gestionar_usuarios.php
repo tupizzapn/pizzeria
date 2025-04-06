@@ -54,11 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_usuario'])) {
 
 // Obtener lista de usuarios
 try {
-    $usuarios = $conn->query(
-        "SELECT id, username, rol, nombre, telefono 
-         FROM usuarios 
-         ORDER BY created_at DESC"
-    )->fetchAll(PDO::FETCH_ASSOC);
+    // Cambia la consulta de usuarios a:
+$usuarios = $conn->query(
+    "SELECT id, username, rol, nombre, telefono 
+     FROM usuarios 
+     WHERE activo = TRUE
+     ORDER BY created_at DESC"
+)->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     $error = "Error al obtener usuarios: " . $e->getMessage();
 }
@@ -75,9 +77,9 @@ try {
     .contenedor_tabla {
         background-image: url('<?php echo IMG_URL; ?>/backgrounds/background_sm.jpg');
     }
-    /*.tabla_menu { 
+    .tabla { 
         background-image: url('<?php echo IMG_URL; ?>/backgrounds/nota_sf.png');
-    }*/
+    }
 
     </style>
     <script>
@@ -85,92 +87,122 @@ try {
     </script>
 </head>
 <body>
-    <div class="contenedor_tabla">
-     <div class="tabla_menu">
-        <div class="tabla">
-            <div class="titulo_font">
-                <h1>Gestionar Usuarios</h1>
-                <p>Bienvenido, <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>! 
-                   <a href="<?php echo BASE_URL; ?>/controllers/logout.php">Cerrar sesión</a>
-                </p>
-
-                <?php if (isset($error)): ?>
-                    <div class="alert alert-error"><?php echo $error; ?></div>
-                <?php endif; ?>
+<div class="contenedor_tabla">
+    <div class="tabla">
+        <!-- Encabezado unificado -->
+        <div class="titulo_font">
+            <h1>Gestionar Usuarios</h1>
+            <p>Bienvenido, <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>!</p>
+            
+            <!-- Menú de navegación optimizado -->
+            <div class="menu-navegacion">
+                <ul>
+                    <li><a href="<?php echo BASE_URL; ?>/views/index.php">Regresar</a></li> 
+                    <li><a href="#" id="btnNuevo">Nuevo ingreso</a></li> 
+                    <li><a href="#" id="btnEditar">Editar Usuario</a></li> 
+                </ul>
             </div>
 
-            <!-- Formulario de Registro -->
-            <div class="nuevo_ingreso">
-                <h2 class="titulo_font">Agregar Usuario</h2>
-                <form action="<?php echo BASE_URL; ?>/controllers/gestionar_usuarios.php" method="POST">
-                    <div>
-                        <label for="username">Usuario:</label>
-                        <input type="text" id="username" name="username" required>
-                        <div id="username-error" style="display: none; color: red;"></div>
-                    </div>
-                    
-                    <div>
-                        <label for="rol">Rol:</label>
-                        <select id="rol" name="rol" required>
-                            <option value="admin">Admin</option>
-                            <option value="vendedor">Vendedor</option>
-                            <option value="pizzero">Pizzero</option>
-                            <option value="delivery">Delivery</option>
-                        </select>
-                    </div>
-                    
-                    <div>
-                        <label for="password">Contraseña:</label>
-                        <input type="password" id="password" name="password" required>
-                    </div>
-                    
-                    <div>
-                        <label for="nombre">Nombre Completo:</label>
-                        <input type="text" id="nombre" name="nombre" required>
-                    </div>
-                    
-                    <div>
-                        <label for="telefono">Teléfono:</label>
-                        <input type="text" id="telefono" name="telefono" required 
-                               pattern="[0-9]{9,15}" title="9-15 dígitos numéricos">
-                    </div>
-                    
-                    <button type="submit" name="agregar_usuario">Agregar Usuario</button>
-                </form>
-            </div>
+            <?php if (isset($error)): ?>
+                <div class="alert alert-error"><?php echo $error; ?></div>
+            <?php endif; ?>
+        </div>
+
+                  <!-- Formulario de Registro -->
+                  <div class="nuevo_ingreso" style="display: none;">
+            <h2>Agregar Usuario</h2>
+            <form action="<?php echo htmlspecialchars(BASE_URL.'/controllers/gestionar_usuarios.php'); ?>" method="POST">
+                                    <div>
+                                                     <label for="username">Usuario:</label>
+                                                     <input type="text" id="username" name="username" required 
+                                                     autocomplete="off" 
+                                                    readonly 
+                                                    onfocus="this.removeAttribute('readonly')"
+                                                    value="<?php echo htmlspecialchars('', ENT_QUOTES); ?>">
+                                                 <div class="error-msg" id="username-error"></div>
+                                    </div>
+            
+                                    <div>
+                                            <label for="rol">Rol:</label>
+                                            <select id="rol" name="rol" required 
+                                                    autocomplete="off" 
+                                                    readonly 
+                                                   onfocus="this.removeAttribute('readonly')">
+                                                    <option value="">Seleccione un rol</option>
+                                                    <option value="admin">Admin</option>
+                                                    <option value="vendedor">Vendedor</option>
+                                                    <option value="pizzero">Pizzero</option>
+                                                    <option value="delivery">Delivery</option>
+                                            </select>
+                                    </div>
+            
+                                    <div>
+                                           <label for="password">Contraseña:</label>
+                                            <input type="password" id="password" name="password" required 
+                                             autocomplete="new-password"
+                                             readonly 
+                                             onfocus="this.removeAttribute('readonly')"
+                                             value="<?php echo htmlspecialchars('', ENT_QUOTES); ?>">
+                                    </div>
+            
+                                    <div>
+                                        <label for="nombre">Nombre Completo:</label>
+                                        <input type="text" id="nombre" name="nombre" required 
+                                        autocomplete="off" 
+                                        readonly 
+                                        onfocus="this.removeAttribute('readonly')"
+                                        value="<?php echo htmlspecialchars('', ENT_QUOTES); ?>">
+                                    </div>
+            
+                                    <div>
+                                         <label for="telefono">Teléfono:</label>
+                                        <input type="text" id="telefono" name="telefono" required 
+                                        pattern="[0-9]{9,15}" 
+                                        title="9-15 dígitos numéricos" 
+                                        autocomplete="off" 
+                                        readonly 
+                                        onfocus="this.removeAttribute('readonly')"
+                                        value="<?php echo htmlspecialchars('', ENT_QUOTES); ?>">
+                                    </div>
+            
+                                    <button type="submit" name="agregar_usuario">Agregar Usuario</button>
+                             </form>
+                </div>
 
             <!-- Lista de Usuarios -->
+            <div class="lista-usuarios">
             <h2>Lista de Usuarios</h2>
             <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Usuario</th>
-                        <th>Rol</th>
-                        <th>Nombre</th>
-                        <th>Teléfono</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($usuarios as $usuario): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($usuario['id']); ?></td>
-                            <td><?php echo htmlspecialchars($usuario['username']); ?></td>
-                            <td><?php echo htmlspecialchars($usuario['rol']); ?></td>
-                            <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
-                            <td><?php echo htmlspecialchars($usuario['telefono']); ?></td>
-                            <td>
-                                <a href="<?php echo BASE_URL; ?>/controllers/editar_usuario.php?id=<?php echo $usuario['id']; ?>">Editar</a>
-                                <a href="<?php echo BASE_URL; ?>/controllers/eliminar_usuario.php?id=<?php echo $usuario['id']; ?>" 
-                                   onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+                      <thead>
+                         <tr>
+                            <th>Usuario</th>
+                            <th>Rol</th>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Acciones</th>
+                          </tr>
+                     </thead>
+                    <tbody>
+                          <?php foreach ($usuarios as $usuario): ?>
+                            <tr>
+                                    <td><?php echo htmlspecialchars($usuario['username']); ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['rol']); ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['nombre']); ?></td>
+                                    <td><?php echo htmlspecialchars($usuario['telefono']); ?></td>
+                                    <td>
+                                        <a href="<?php echo BASE_URL; ?>/controllers/editar_usuario.php?id=<?php echo $usuario['id']; ?>">Editar</a>
+                                        <a href="<?php echo BASE_URL; ?>/controllers/eliminar_usuario.php?id=<?php echo $usuario['id']; ?>" 
+                                         onclick="return confirm('¿Eliminar este usuario?')">Eliminar</a>
+                                    </td>
+                            </tr>
+                     <?php endforeach; ?>
+                    </tbody>
+                </table>
+        
+            </div>
+           
         </div>
-     </div> 
+     
     </div>
     
     <script src="<?php echo JS_URL; ?>/gestion_usuario.js"></script>

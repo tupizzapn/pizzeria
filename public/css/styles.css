@@ -1,11 +1,36 @@
-/* Estilos generales */
-html {
-  font-size: 16px;
+/* ==================== */
+/* VARIABLES Y GENERALES */
+/* ==================== */
+:root {
+  --color-primario: #513a26;
+  --color-secundario: #182333;
+  --color-fondo: #f9f9f9;
+  --color-borde: #ddd;
+  --color-texto: #182333;
+  --color-blanco: #ffffff;
+  --sombra-suave: 0 0 10px rgba(0, 0, 0, 0.1);
+  --transicion-rapida: all 0.3s ease;
 }
-/*****************************************GENERAL*/
-body, .contenedor-principal, .contenedor_menu, .contenedor_tabla {
+
+/* Estilos base */
+html {
+  font-size: 2.5vw;
+}
+
+body {
   margin: 0;
   padding: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.contenedor-principal, 
+.contenedor_menu, 
+.contenedor_tabla {
   width: 100%;
   height: 100vh;
   background-size: cover;
@@ -13,38 +38,156 @@ body, .contenedor-principal, .contenedor_menu, .contenedor_tabla {
   background-repeat: no-repeat;
 }
 
-body {
-  overflow: hidden;
+/* ==================== */
+/* TIPOGRAFÍA */
+/* ==================== */
+h1 {
+  font-family: 'Lugrasimo', cursive;
+  font-size: 2.5rem;
+  color: var(--color-secundario);
 }
 
-/*******************************************************************/
-/*********************************************gestion_usuario*/
+h2 {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1rem;
+  color: var(--color-secundario);
+}
 
-/* Contenedor de la tabla */
+p {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.7rem;
+  color: var(--color-secundario);
+  margin: -1.2rem 0 0 1rem;
+}
+
+/* ==================== */
+/*    Editar_Usuarios   */
+/* ==================== */
+
+        .contenedor-edicion {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, 
+        .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .btn-guardar {
+            background-color: #513a26;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .error-msg {
+            color: #d32f2f;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+
+/* ==================== */
+/* GESTIÓN DE USUARIOS */
+/* ==================== */
+/* Contenedor principal */
 .contenedor_tabla {
-  background-size: cover;
-  background-position: center;
   display: grid;
-  grid-template-columns: 0.5fr 2fr 0.5fr;
-  grid-template-rows: 0.1fr 3.4fr 0.5fr;
+  grid-template-columns: 1fr 20fr 1fr;
+  grid-template-rows: 1fr;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  padding: 20px;
 }
 
-.tabla_menu {
+.contenedor_tabla.vacio {
+  display: flex;
+}
 
+/* Tabla de usuarios */
+.tabla {
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  width: auto;
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 10px;
+  padding-top: 12%;
+}
 
+.lista-usuarios h2 {
+  font-size: 2rem;
+  margin-left: 2rem;
+}
 
+table {
+  width: 95%;
+  border-collapse: collapse;
+  margin: 0 0 0 1rem;
+}
+
+table th,
+table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-borde);
+}
+
+table th {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+}
+
+table tr:nth-child(even) {
+  background-color: var(--color-fondo);
+}
+
+table tr:hover {
+  background-color: #f1f1f1;
+}
+
+table a {
+  color: var(--color-secundario);
+  text-decoration: none;
+  margin-right: 10px;
+  transition: var(--transicion-rapida);
+}
+
+table a:hover {
+  text-decoration: underline;
 }
 
 /* Formulario */
 .nuevo_ingreso {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-  margin-bottom: 20px;
+  width: auto;
+  margin-top: 10%;
+  padding: 5%;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.nuevo_ingreso .contenido-formulario {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--sombra-suave);
 }
 
 .nuevo_ingreso label {
@@ -55,179 +198,252 @@ body {
 
 .nuevo_ingreso input,
 .nuevo_ingreso select {
-  width: 100%;
+  width: 80%;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 1rem;
+  transition: var(--transicion-rapida);
 }
 
 .nuevo_ingreso button {
   grid-column: span 2;
   padding: 10px;
-  background-color: #513a26;
-  color: white;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
+  transition: var(--transicion-rapida);
 }
 
 .nuevo_ingreso button:hover {
   background-color: #2c3e50;
 }
 
-/* Tabla */
-
-table {
+/* Navegación */
+.titulo_font ul {
+  list-style: none;
+  font-size: 1rem;
+  margin: 1rem 0 0 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-around;
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 0px;
 }
 
-table th,
-table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
+.titulo_font li {
+  padding: 5px 10px;
+  background-color: rgba(81, 58, 38, 0.7);
+  border-radius: 5px;
+  margin: 0 5px;
+  text-align: center;
+  transition: var(--transicion-rapida);
 }
 
-table th {
-  background-color: #513a26;
-  color: white;
-}
-
-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-table tr:hover {
-  background-color: #f1f1f1;
-}
-
-table a {
-  color: #182333;
+.titulo_font li a {
+  color: var(--color-blanco);
   text-decoration: none;
-  margin-right: 10px;
 }
 
-table a:hover {
-  text-decoration: underline;
-}
-
-/* Tipografía */
-.titulo_font h1 {
-  font-family: 'Lugrasimo', cursive;
-  font-size: 2.5rem;
-  margin-bottom: 10px;
-  color: #182333;
-}
-
-.titulo_font h2 {
-  font-family: 'Indie Flower', cursive;
-  font-size: 2rem;
-  margin-bottom: 15px;
-  color: #182333;
-}
-
-.titulo_font p {
-  font-family: 'Indie Flower', cursive;
-  font-size: 1.2rem;
-  margin-bottom: 20px;
-  color: #182333;
+.titulo_font li:hover {
+  background-color: var(--color-primario);
 }
 
 
-/* Responsividad 
+/*******************************************************/
+/* ==================== */
+/* GESTIÓN DE USUARIOS (optimizado) */
+/* ==================== */
+
+/* Contenedor principal (sin cambios) */
+.contenedor_tabla {
+  display: grid;
+  grid-template-columns: 1fr 20fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* Encabezado mejorado */
+.titulo_font {
+  padding: 0 15px;
+}
+
+.menu-navegacion ul {
+  list-style: none;
+  padding: 0;
+  margin: 15px 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.menu-navegacion li {
+  padding: 8px 12px;
+  background-color: rgba(81, 58, 38, 0.7);
+  border-radius: 5px;
+}
+
+/* Formulario optimizado */
+.nuevo_ingreso {
+  padding: 20px;
+  margin: 20px auto;
+  max-width: 800px;
+}
+
+.nuevo_ingreso .contenido-formulario {
+  padding: 15px;
+}
+
+/* Tabla mejorada */
+.lista-usuarios {
+  margin: 30px auto;
+  overflow-x: auto;
+}
+
+/* Manteniendo todas las clases JS necesarias */
+.mostrar-formulario .nuevo_ingreso,
+.mostrar-tabla .lista-usuarios {
+  display: block;
+}
+
+.mostrar-formulario .lista-usuarios,
+.mostrar-tabla .nuevo_ingreso {
+  display: none;
+}
+
+
+
+
+
+
+/* ==================== */
+/* ESTADOS Y TRANSICIONES */
+/* ==================== */
+/* Mostrar/ocultar elementos */
+.mostrar-formulario .formulario-seccion,
+.mostrar-formulario .nuevo_ingreso {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+
+.mostrar-tabla .tabla-seccion,
+.mostrar-tabla table {
+  display: table;
+  animation: fadeIn 0.5s ease;
+}
+
+.mostrar-formulario .tabla-seccion,
+.mostrar-formulario table,
+.contenedor_tabla.mostrar-formulario .tabla table,
+.mostrar-tabla .nuevo_ingreso,
+.contenedor_tabla.mostrar-tabla .nuevo_ingreso {
+  display: none;
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estados especiales */
+.nav-activo {
+  background-color: var(--color-primario) !important;
+  color: var(--color-blanco) !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+  transition: background-color 5000s ease-in-out 0s !important;
+}
+
+input[readonly], 
+select[readonly] {
+  background-color: #f8f8f8;
+  cursor: text;
+}
+
+/* Validación */
+.error-msg {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+
+input:invalid, 
+input.error {
+  border-color: #d32f2f !important;
+}
+
+input:valid {
+  border-color: #4CAF50 !important;
+}
+
+/* ==================== */
+/* RESPONSIVE */
+/* ==================== */
 @media (max-width: 768px) {
   .nuevo_ingreso {
-      grid-template-columns: 1fr;
+    padding: 10px;
+    margin-top: 5%;
   }
-
-  .nuevo_ingreso button {
-      grid-column: span 1;
+  
+  .nuevo_ingreso input,
+  .nuevo_ingreso select {
+    width: 95%;
+    font-size: 0.9rem;
   }
-
-  .tabla {
-      padding: 10px;
+  
+  table {
+    font-size: 0.8rem;
   }
-
-  .titulo_font h1 {
-      font-size: 2rem;
-  }
-
-  .titulo_font h2 {
-      font-size: 1.5rem;
+  
+  table th,
+  table td {
+    padding: 5px;
   }
 }
-*/
 
+/* ==================== */
+/* VARIABLES PARA INDEX */
+/* ==================== */
+:root {
+  --color-menu-texto: #341C19;
+  --color-boton-primario: #d32f2f;
+  --color-boton-hover: #b71c1c;
+  --color-boton-secundario: #DE0989;
+  --color-fondo-item: #baa159;
+  --degradado-fondo: linear-gradient(
+    to bottom, 
+    rgba(180, 0, 0, 0.2),
+    rgba(0, 0, 0, 0.8)
+  );
+  --transicion-rapida: all 0.3s ease;
+  --transicion-lenta: all 0.6s ease;
+}
 
-/*****************************************************/
-/*****************************************index*/
+/* ==================== */
+/* ESTRUCTURA PRINCIPAL */
+/* ==================== */
 .contenedor_menu {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   display: grid;
   grid-template-rows: 1.1fr 2.8fr 0.9fr;
   grid-template-columns: 0.7fr 3fr 0.6fr;
-  }
-
-.menu {
-  grid-row-start: 2;
-  grid-row-end: 3;
-  grid-column-start: 2;
-  grid-column-end: 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding: 2%;
-  gap: 10px;
-  margin-top:15dvh;
-  }
-  .menu_vertical {
-    list-style:none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px; /* Espaciado entre ítems */
-    }
-  .menu_vertical li a {
-    text-decoration: none;
-    color: #341C19;
-    font-family: 'Indie Flower', cursive;
-    font-weight: 600;
-    font-style: normal;
-    font-size: 1.7rem;
-    }
-  .menu_vertical li {
-    margin: 10px 0;
-    padding-left: 30px;
-    position: relative;
-    }
-    .menu_vertical li::before {
-    content: attr(data-icon); /* Usa el valor del atributo data-icon */
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 10px;
-    }
- 
-.logo {
-  height: 20%;
-}  
-.logo img {
-  max-width: 100%;
-  max-height: 100%;
-
 }
 
 .contenedor-principal {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   display: grid;
   grid-template-rows: repeat(4, 1fr);
   grid-template-columns: 1fr 1.5fr 1fr;
@@ -241,11 +457,7 @@ table a:hover {
   left: 2px;
   right: 2px;
   bottom: 2px;
-  background: linear-gradient(
-    to bottom, 
-    rgba(180, 0, 0, 0.2),
-    rgba(0, 0, 0, 0.8)
-  );
+  background: var(--degradado-fondo);
   z-index: 1;
 }
 
@@ -253,28 +465,84 @@ table a:hover {
   position: relative;
   z-index: 2;
 }
-/***********************************************GRID LOGO*/
+
+/* ==================== */
+/* COMPONENTES MENÚ */
+/* ==================== */
+.menu {
+  grid-row: 2 / 3;
+  grid-column: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  padding: 2%;
+  gap: 10px;
+  margin-top: 15dvh;
+}
+
+.menu_vertical {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu_vertical li {
+  margin: 10px 0;
+  padding-left: 30px;
+  position: relative;
+}
+
+.menu_vertical li::before {
+  content: attr(data-icon);
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: 10px;
+}
+
+.menu_vertical li a {
+  text-decoration: none;
+  color: var(--color-menu-texto);
+  font-family: 'Indie Flower', cursive;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 1.7rem;
+}
+
+/* ==================== */
+/* COMPONENTES LOGO */
+/* ==================== */
+.logo,
 .grid_logo {
-  grid-row-start: 1;
-  grid-row-end: 3;
-  grid-column-start: 2;
-  grid-column-end: 3;
+  height: 20%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.logo img,
 .grid_logo img {
   max-width: 100%;
   max-height: 100%;
 }
-/************************************************GRID ITEM*/
+
+.grid_logo {
+  grid-row: 1 / 3;
+  grid-column: 2 / 3;
+}
+
+/* ==================== */
+/* BOTONES Y FORMULARIOS */
+/* ==================== */
 .grid_item {
-  grid-row-start: 4;
-  grid-row-end: 5;
-  grid-column-start: 1;
-  grid-column-end: 4;
-  background-color: #baa159;
+  grid-row: 4 / 5;
+  grid-column: 1 / 4;
+  background-color: var(--color-fondo-item);
   height: 30%;
   width: 75%;
   justify-self: center;
@@ -282,29 +550,28 @@ table a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.6s ease;
-  transform: border-radius;
+  transition: var(--transicion-lenta);
 }
-/************************************************ BOTON BIENVENIDA*/
+
 .boton-bienvenida {
   width: 90%;
   height: 90%;
   font-size: 2rem;
   color: white;
-  background-color: #d32f2f;
+  background-color: var(--color-boton-primario);
   border: none;
   border-radius: 1dvh;
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: transform 0.6s ease;
+  transition: var(--transicion-lenta);
   perspective: 1000px;
   transform-style: preserve-3d;
 }
 
 .boton-bienvenida span {
   display: block;
-  transition: opacity 0.3s ease;
+  transition: var(--transicion-rapida);
 }
 
 .boton-bienvenida::after {
@@ -317,16 +584,16 @@ table a:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #DE0989;
+  background-color: var(--color-boton-secundario);
   border-radius: 1dvh;
   transform: rotateY(180deg);
-  backface-visibility:visible;
+  backface-visibility: visible;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: var(--transicion-rapida);
 }
 
 .boton-bienvenida:hover {
-  background-color: #b71c1c;
+  background-color: var(--color-boton-hover);
 }
 
 .boton-bienvenida.volteado {
@@ -340,12 +607,13 @@ table a:hover {
 .boton-bienvenida.volteado::after {
   opacity: 1;
 }
-/********************************************FORMULARIO LOGIN*/
+
+/* ==================== */
+/* FORMULARIO LOGIN */
+/* ==================== */
 .formulariologin {
-  grid-row-start: 3;
-  grid-row-end: 4;
-  grid-column-start: 1;
-  grid-column-end: 5;
+  grid-row: 3 / 4;
+  grid-column: 1 / 5;
   justify-self: center;
   align-self: end;
   margin-top: 12%;
@@ -355,7 +623,7 @@ table a:hover {
   gap: 10px;
   width: 75%;
   height: 0;
-  background-color: #baa159;
+  background-color: var(--color-fondo-item);
   transition: height 0.5s ease;
   transform-origin: bottom;
   overflow: hidden;
@@ -366,7 +634,6 @@ table a:hover {
   height: 80%;
 }
 
-/* Estilos para el formulario */
 .formulariologin form {
   padding: 20px;
   display: flex;
@@ -374,27 +641,24 @@ table a:hover {
   gap: 15px;
 }
 
-/* Estilos para los grupos de formulario */
 .formulariologin .form-group {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-/* Estilos para las etiquetas */
 .formulariologin label {
   font-size: 1.2rem;
   color: white;
 }
 
-/* Estilos para los inputs */
 .formulariologin input {
   padding: 10px;
   border: none;
   border-radius: 0.5dvh;
   font-size: 1rem;
   background-color: rgba(255, 255, 255, 0.9);
-  transition: background-color 0.3s ease;
+  transition: var(--transicion-rapida);
 }
 
 .formulariologin input:focus {
@@ -402,23 +666,21 @@ table a:hover {
   outline: none;
 }
 
-/* Estilos para el botón de login */
 .formulariologin .btn-login {
   padding: 10px;
   border: none;
   border-radius: 0.5dvh;
   font-size: 1.2rem;
   color: white;
-  background-color: #d32f2f;
+  background-color: var(--color-boton-primario);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: var(--transicion-rapida);
 }
 
 .formulariologin .btn-login:hover {
-  background-color: #b71c1c;
+  background-color: var(--color-boton-hover);
 }
 
-/* Estilos para el mensaje de error */
 .formulariologin .alert-error {
   padding: 10px;
   border-radius: 0.5dvh;
@@ -427,5 +689,3 @@ table a:hover {
   text-align: center;
   font-size: 1rem;
 }
-
-
