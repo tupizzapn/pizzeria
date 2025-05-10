@@ -36,10 +36,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim(filter_input(INPUT_POST, 'nombre', FILTER_SANITIZE_STRING));
     $precio_familiar = filter_input(INPUT_POST, 'precio_familiar', FILTER_SANITIZE_STRING);
     $precio_pequeña = filter_input(INPUT_POST, 'precio_pequeña', FILTER_SANITIZE_STRING);
+    $cantidad_familiar = filter_input(INPUT_POST, 'cantidad_familiar', FILTER_SANITIZE_STRING);
+    $cantidad_pequeña = filter_input(INPUT_POST, 'cantidad_pequeña', FILTER_SANITIZE_STRING);
     
-    // Procesamiento de precios
+    // Procesamiento de valores numéricos
     $precio_familiar = str_replace(',', '.', $precio_familiar);
     $precio_pequeña = str_replace(',', '.', $precio_pequeña);
+    $cantidad_familiar = str_replace(',', '.', $cantidad_familiar);
+    $cantidad_pequeña = str_replace(',', '.', $cantidad_pequeña);
     
     $precio_familiar = filter_var($precio_familiar, FILTER_VALIDATE_FLOAT, [
         'options' => ['decimal' => '.', 'min_range' => 0.01]
@@ -48,8 +52,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $precio_pequeña = filter_var($precio_pequeña, FILTER_VALIDATE_FLOAT, [
         'options' => ['decimal' => '.', 'min_range' => 0.01]
     ]);
+    
+    $cantidad_familiar = filter_var($cantidad_familiar, FILTER_VALIDATE_FLOAT, [
+        'options' => ['decimal' => '.', 'min_range' => 0.01]
+    ]);
+    
+    $cantidad_pequeña = filter_var($cantidad_pequeña, FILTER_VALIDATE_FLOAT, [
+        'options' => ['decimal' => '.', 'min_range' => 0.01]
+    ]);
 
     $errores = [];
+
 
     if (empty($nombre) || strlen($nombre) < 3) {
         $errores[] = "Nombre debe tener al menos 3 caracteres";
@@ -75,10 +88,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     "UPDATE toppings SET 
                      nombre = ?, 
                      precio_familiar = ?, 
-                     precio_pequeña = ? 
+                     precio_pequeña = ?,
+                     cantidad_familiar = ?,
+                     cantidad_pequeña = ?
                      WHERE id = ?"
                 );
-                $stmt->execute([$nombre, $precio_familiar, $precio_pequeña, $id]);
+                $stmt->execute([
+                    $nombre, 
+                    $precio_familiar, 
+                    $precio_pequeña,
+                    $cantidad_familiar,
+                    $cantidad_pequeña,
+                    $id
+                ]);
                 
                 $_SESSION['exito'] = "Topping actualizado correctamente";
                 header('Location: ' . BASE_URL . '/controllers/gestionar_toppins.php');
@@ -146,6 +168,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                class="precio-input" data-decimales="2"
                                value="<?= number_format($topping['precio_pequeña'], 2, '.', '') ?>"
                                placeholder="0.00" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cantidad_familiar">Cantidad (Familiar):</label>
+                        <input type="text" id="cantidad_familiar" name="cantidad_familiar"
+                               class="precio-input" data-decimales="2"
+                               value="<?= number_format($topping['cantidad_familiar'] ?? 1.00, 2, '.', '') ?>"
+                               placeholder="1.00" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cantidad_pequeña">Cantidad (Pequeña):</label>
+                        <input type="text" id="cantidad_pequeña" name="cantidad_pequeña"
+                               class="precio-input" data-decimales="2"
+                               value="<?= number_format($topping['cantidad_pequeña'] ?? 0.50, 2, '.', '') ?>"
+                               placeholder="0.50" required>
                     </div>
                     
                     <button type="submit" class="btn-guardar">Guardar Cambios</button>

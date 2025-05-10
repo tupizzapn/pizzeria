@@ -42,8 +42,8 @@ if (!isset($_SESSION['user_id'])) {
                 <li data-icon="👤"><a href="<?php echo BASE_URL; ?>/controllers/gestionar_usuarios.php">Usuarios</a> </li>
             <?php endif; ?>
             <?php if ($_SESSION['rol'] === 'vendedor'): ?>
-                <li data-icon="🛒"><a href="<?php echo BASE_URL; ?>/views/realizar_pedido.php">Realizar Pedido</a> </li>
-                <li data-icon="📋"><a href="<?php echo BASE_URL; ?>/views/pedidos.php">Ver Pedidos</a> </li>
+                <li data-icon="🛒"><a href="<?php echo BASE_URL; ?>/views/pedidos_procesados.php">Ventas</a> </li>
+                <li data-icon="📋"><a href="<?php echo BASE_URL; ?>/views/pedidos.php">Pedidos</a> </li>
             <?php endif; ?>
                 <li data-icon="🚪"><a href="<?php echo BASE_URL; ?>/controllers/logout.php">Cerrar sesión</a> </li>
             </ul>

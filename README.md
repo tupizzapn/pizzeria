@@ -92,6 +92,7 @@ clientes
     |id
     |nombre
     |telefono
+    |direccion    
 
 pizzas
     |id
@@ -108,6 +109,8 @@ toppings
     |precio_pequeña
     |activo
     |fecha_eliminacion       
+    |cantidad_familiar  
+    |cantidad_pequeña          
 
 
 usuarios
@@ -397,6 +400,49 @@ elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['nombre_topping'])) 
         echo json_encode(['error' => 'Error en la base de datos']);
     }
 }
+// ... (código existente) ...
+
+elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['action']) && $_GET['action'] === 'get_precios') {
+    // Permitir tanto a admin como a vendedor
+    if ($_SESSION['rol'] !== 'admin' && $_SESSION['rol'] !== 'vendedor') {
+        echo json_encode(['error' => 'Acceso no autorizado']);
+        exit();
+    }
+    
+    try {
+        // Obtener precios de pizzas
+        $pizzas = $conn->query("SELECT id, nombre, tamaño, precio FROM pizzas")->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Obtener precios de toppings
+        $toppings = $conn->query("SELECT id, nombre, precio_familiar, precio_pequeña FROM toppings")->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Estructurar la respuesta
+        $response = [
+            'pizzas' => array_map(function($pizza) {
+                return [
+                    'id' => $pizza['id'],
+                    'nombre' => $pizza['nombre'],
+                    'tamaño' => $pizza['tamaño'],
+                    'precio' => $pizza['precio']
+                ];
+            }, $pizzas),
+            'toppings' => array_map(function($topping) {
+                return [
+                    'id' => $topping['id'],
+                    'nombre' => $topping['nombre'],
+                    'precio_familiar' => $topping['precio_familiar'],
+                    'precio_pequeña' => $topping['precio_pequeña']
+                ];
+            }, $toppings)
+        ];
+        
+        echo json_encode($response);
+        
+    } catch (PDOException $e) {
+        echo json_encode(['error' => 'Error al obtener precios', 'details' => $e->getMessage()]);
+    }
+}
+
 else {
     echo json_encode(['error' => 'Solicitud inválida']);
 }

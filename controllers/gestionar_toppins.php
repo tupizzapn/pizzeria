@@ -13,10 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_topping'])) {
     $nombre = filter_input(INPUT_POST, 'nombre_topping', FILTER_SANITIZE_STRING);
     $precio_familiar = filter_input(INPUT_POST, 'precio_familiar', FILTER_SANITIZE_STRING);
     $precio_pequeña = filter_input(INPUT_POST, 'precio_pequeña', FILTER_SANITIZE_STRING);
+    $cantidad_familiar = filter_input(INPUT_POST, 'cantidad_familiar', FILTER_SANITIZE_STRING);
+    $cantidad_pequeña = filter_input(INPUT_POST, 'cantidad_pequeña', FILTER_SANITIZE_STRING);
     
-    // Procesamiento de precios
+    // Procesamiento de valores numéricos
     $precio_familiar = str_replace(',', '.', $precio_familiar);
     $precio_pequeña = str_replace(',', '.', $precio_pequeña);
+    $cantidad_familiar = str_replace(',', '.', $cantidad_familiar);
+    $cantidad_pequeña = str_replace(',', '.', $cantidad_pequeña);
     
     $precio_familiar = filter_var($precio_familiar, FILTER_VALIDATE_FLOAT, [
         'options' => ['decimal' => '.', 'min_range' => 0.01]
@@ -25,12 +29,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_topping'])) {
     $precio_pequeña = filter_var($precio_pequeña, FILTER_VALIDATE_FLOAT, [
         'options' => ['decimal' => '.', 'min_range' => 0.01]
     ]);
+    
+    $cantidad_familiar = filter_var($cantidad_familiar, FILTER_VALIDATE_FLOAT, [
+        'options' => ['decimal' => '.', 'min_range' => 0.01]
+    ]);
+    
+    $cantidad_pequeña = filter_var($cantidad_pequeña, FILTER_VALIDATE_FLOAT, [
+        'options' => ['decimal' => '.', 'min_range' => 0.01]
+    ]);
 
     try {
-        if (empty($nombre) || $precio_familiar === false || $precio_pequeña === false) {
-            $error = "Todos los campos son obligatorios y los precios deben ser válidos.";
-        } elseif ($precio_familiar <= 0 || $precio_pequeña <= 0) {
-            $error = "Los precios deben ser mayores a cero.";
+        if (empty($nombre) || $precio_familiar === false || $precio_pequeña === false || 
+            $cantidad_familiar === false || $cantidad_pequeña === false) {
+            $error = "Todos los campos son obligatorios y los valores deben ser válidos.";
+        } elseif ($precio_familiar <= 0 || $precio_pequeña <= 0 || 
+                 $cantidad_familiar <= 0 || $cantidad_pequeña <= 0) {
+            $error = "Todos los valores deben ser mayores a cero.";
         } else {
             $stmt = $conn->prepare("SELECT id FROM toppings WHERE nombre = ? AND activo = TRUE");
             $stmt->execute([$nombre]);
@@ -39,10 +53,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_topping'])) {
                 $error = "Ya existe un topping con este nombre.";
             } else {
                 $stmt = $conn->prepare(
-                    "INSERT INTO toppings (nombre, precio_familiar, precio_pequeña) 
-                     VALUES (?, ?, ?)"
+                    "INSERT INTO toppings 
+                    (nombre, precio_familiar, precio_pequeña, cantidad_familiar, cantidad_pequeña) 
+                    VALUES (?, ?, ?, ?, ?)"
                 );
-                $stmt->execute([$nombre, $precio_familiar, $precio_pequeña]);
+                $stmt->execute([
+                    $nombre, 
+                    $precio_familiar, 
+                    $precio_pequeña,
+                    $cantidad_familiar,
+                    $cantidad_pequeña
+                ]);
                 header('Location: ' . $_SERVER['PHP_SELF']);
                 exit();
             }
@@ -52,9 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['agregar_topping'])) {
     }
 }
 
-// Obtener toppings activos
+// Obtener toppings activos (actualizado para incluir las nuevas columnas)
 $toppings = $conn->query(
-    "SELECT id, nombre, precio_familiar, precio_pequeña 
+    "SELECT id, nombre, precio_familiar, precio_pequeña, cantidad_familiar, cantidad_pequeña
      FROM toppings 
      WHERE activo = TRUE
      ORDER BY nombre"
@@ -121,6 +142,21 @@ $toppings = $conn->query(
                            placeholder="0.00" required>
                 </div>
 
+                <div class="form-group">
+                    <label for="cantidad_familiar">Cantidad (Familiar):</label>
+                    <input type="text" id="cantidad_familiar" name="cantidad_familiar"
+                           class="precio-input" data-decimales="2"
+                           placeholder="1.00" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad_pequeña">Cantidad (Pequeña):</label>
+                    <input type="text" id="cantidad_pequeña" name="cantidad_pequeña"
+                           class="precio-input" data-decimales="2"
+                           placeholder="0.50" required>
+                </div>
+
+
                 <button type="submit" name="agregar_topping">Agregar Topping</button>
             </form>
         </div>
@@ -133,8 +169,9 @@ $toppings = $conn->query(
                         <th>Nombre</th>
                         <th>Precio Familiar</th>
                         <th>Precio Pequeña</th>
+                        <th>Cant. Familiar</th>
+                        <th>Cant. Pequeña</th>
                         <th>Acciones</th>
-                    </tr>
                 </thead>
                 <tbody>
                     <?php foreach ($toppings as $topping): ?>
@@ -142,6 +179,8 @@ $toppings = $conn->query(
                             <td><?php echo htmlspecialchars($topping['nombre'], ENT_QUOTES, 'UTF-8'); ?></td>
                             <td><?php echo number_format($topping['precio_familiar'], 2); ?></td>
                             <td><?php echo number_format($topping['precio_pequeña'], 2); ?></td>
+                            <td><?php echo number_format($topping['cantidad_familiar'], 2); ?></td>
+                            <td><?php echo number_format($topping['cantidad_pequeña'], 2); ?></td>
                             <td>
                                 <a href="<?php echo BASE_URL; ?>/controllers/editar_toppins.php?id=<?php echo $topping['id']; ?>">Editar</a>
                                 <a href="<?php echo BASE_URL; ?>/controllers/eliminar_toppins.php?id=<?php echo $topping['id']; ?>" 

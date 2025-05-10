@@ -8,6 +8,7 @@
   --color-borde: #ddd;
   --color-texto: #182333;
   --color-blanco: #ffffff;
+  --color-azul: #3d5a80;
   --sombra-suave: 0 0 10px rgba(0, 0, 0, 0.1);
   --transicion-rapida: all 0.3s ease;
 }
@@ -59,6 +60,675 @@ p {
   color: var(--color-secundario);
   margin: -1.2rem 0 0 1rem;
 }
+
+/* ====================== */
+/*    Ventas.php  */
+/* ====================== */
+.contenedor_ventas {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
+  height: 100vh;
+  width: auto;
+  display: grid;
+  grid-template-columns: 1fr 7fr 1fr;
+  grid-template-rows: 1fr 5fr 1fr;
+  justify-content: center;
+  align-items: center;
+  padding-left: 2%;
+}
+
+.factura {
+  height: 100%;
+  width: auto;
+  grid-column: 2;
+  grid-row: 2;
+  margin: 1%;
+  padding: 7%;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  box-shadow: inset 4px 2px 128px -120px rgba(0,0,0,0.68);
+  position: relative;
+  overflow: hidden;
+  border-left: 4px solid #f44336; /* Verde, rojo (#F44336), etc. */
+}
+
+.info_item {
+  font-family: arial;
+  font-size: 1.4rem;
+ 
+}
+
+.info_item {
+  display: block; /* Cada item en una nueva línea */
+  margin-bottom: 5px; /* Espacio entre líneas */
+}
+
+.info_item strong {
+  font-weight:600;
+  color: #2c3e50;
+  margin-left: 5px;
+}
+
+.info_item span {
+  font-weight:600;
+  color:#3d5a80;
+  margin-left: 2rem;
+  padding: 20px;
+}
+
+/****************************/
+
+/* Estilos generales del formulario */
+form {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 25px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos para las etiquetas */
+label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Estilos para los campos de entrada */
+input[type="text"],
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
+/* Estilo para el checkbox de delivery */
+input[type="checkbox"] {
+  margin-left: 10px;
+  transform: scale(1.3);
+}
+
+/* Contenedor de dirección */
+#direccion_container {
+  margin-top: 10px;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  border-left: 4px solid #4CAF50;
+}
+
+/* Estilo para el botón (según lo mencionaste que ya tiene su estilo) */
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 20px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #45a049;
+}
+
+/* Estilo para los select */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 15px;
+}
+
+/* Estilo para el campo de nombre del cliente */
+#nombre_cliente {
+  border-color: #4CAF50;
+}
+
+/* Estilo para los selects de personal */
+#delivery_id, #pizzero_id {
+  border-color: #2196F3;
+}
+
+
+
+
+/* ====================== */
+/*    resumen_pedido.php  */
+/* ====================== */
+
+.contenedor_resumen {
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: top center;
+  height: 100%;
+  width: auto;
+  display: grid;
+  grid-template-columns: 1fr 20fr 1fr;
+  grid-template-rows: 1fr;
+  justify-content: center;
+  align-items: center;
+  padding-left: 2%;
+}
+
+.pantalla_resumen {
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  height: 100%;
+  width: auto;
+  grid-column: 2;
+  grid-row: 1;
+  margin: 1%;
+  padding: 1%;
+}
+
+.area_resumen {
+  height: 100%;
+  width: auto;
+  margin: 5%;
+  padding: 2%;
+  }
+
+.titulo_resumen {
+  font-family: 'Indie Flower', cursive;
+  font-size: 1.7rem;
+} 
+
+.font_resumen {
+  font-family: 'Lugrasimo', cursive;
+  font-size: 1.2rem;
+  color: var(--color-azul);
+}
+
+.font_tabla {
+  font-family: 'Lugrasimo', cursive;;
+  font-size: 1.2rem;
+  color: var(--color-blanco);
+ }
+
+      /* Estilo para los párrafos (Nombre y Teléfono) */
+      .titulo_resumen .info-line strong {
+        display: inline-block;
+        width: auto; /* Ancho fijo para alinear los valores */
+    }
+
+    .titulo_resumen .info-line .value {
+        display: inline;
+    }
+
+     .font_forma {
+      font-family: 'Lugrasimo', cursive;
+      font-size: 1.2rem;
+      color: var(--color-azul);
+    }
+   
+    .contenedor-tabla {
+      display: flex;
+      justify-content:left; /* Centrado horizontal */
+      width: auto;
+      margin-left: -10px;
+    }
+
+    /* Estilos que solo aplicarán a tablas dentro de este contenedor */
+    .tabla-pedidos table {
+      width: 100%;
+  }
+
+  .tabla-pedidos th {
+    text-align: center;
+    padding: 2px;
+  }
+
+  .tabla-pedidos td {
+    padding: 5px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-size: 1.2rem;
+    font-family: 'poppins', cursive;
+}
+
+  /* Centrado específico para columnas numéricas */
+  .tabla-pedidos td:nth-child(2),
+  .tabla-pedidos td:nth-child(4) {
+      text-align: center;
+  }
+
+   /* Estilo para la columna de toppings */
+ .tabla-pedidos th:nth-child(3),
+ .tabla-pedidos td:nth-child(3) {
+    width: 50%; /* Ancho fijo para la columna */
+    word-wrap: break-word;
+ }
+
+  /* Estilo para la lista de toppings */
+  .lista-toppings {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.enviar-pedido {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+
+.font_total {
+  font-size: 1.2rem;
+  font-family: 'poppins', cursive;
+  font-weight: 600;
+}
+
+.notificacion {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 25px;
+  border-radius: 5px;
+  color: white;
+  z-index: 1000;
+  transform: translateX(0);
+  transition: all 0.3s ease;
+}
+
+.notificacion.success {
+  background-color: #2ecc71;
+}
+
+.notificacion.error {
+  background-color: #e74c3c;
+}
+
+.notificacion.desvanecer {
+  transform: translateX(100%);
+  opacity: 0;
+}
+
+/* Agrega esto a tu archivo styles.css */
+.spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.notificacion {
+  /* Tus estilos existentes... */
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+/* ==================== */
+/*    pedidos.php  */
+/* ==================== */
+
+/* ===== FORMULARIO PRINCIPAL ===== */
+.formulario-pedido {
+  display: none;
+  padding: 20px;
+  border: 2px solid #d35400;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  margin: 10px;
+  background-color: #fff;
+}
+
+.formulario-pedido.active {
+  display: block;
+}
+
+/* Centrado específico para columnas numéricas */
+.lista-pedidos td:nth-child(2),
+.lista-pedidos td:nth-child(3) {
+    text-align: center;
+}
+
+.lista-pedidos td {
+  text-align: left;
+  font-size: 1.2rem;
+  font-family: 'poppins', cursive;
+}
+
+
+.lista-pedidos {
+  display: block;
+  margin: 5%;
+  text-align: center;
+}
+
+.lista-pedidos.hidden {
+  display: none;
+}
+
+/* ===== ESTRUCTURA DE PIZZAS ===== */
+#pizzas.pizzas-scrollable {
+  max-height: 60vh;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 10px;
+  margin-bottom: 80px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+#pizzas.pizzas-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+#pizzas.pizzas-scrollable::-webkit-scrollbar-thumb {
+  background: #e74c3c;
+  border-radius: 4px;
+}
+
+.pizza {
+  position: relative;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  border-left: 4px solid #d35400;
+  transition: all 0.3s ease;
+}
+
+.numero-pizza {
+  color: blue;
+  padding: 5px 10px;
+  margin-bottom: 10px;
+  display: inline-block;
+  font-weight: bold;
+  font-size: 1rem;
+  }
+
+/* ===== CAMPOS DEL FORMULARIO ===== */
+.datos-cliente-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.campo-cliente {
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-cliente label {
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.select-pizza, 
+.campo-cliente input, 
+.pizza input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-size: 1rem;
+}
+
+/* ===== TOPPINGS MEJORADOS ===== */
+.toppings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.columna-toppings {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.topping-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.topping-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 10px;
+}
+
+.topping-price {
+  white-space: nowrap;
+  min-width: 70px;
+  text-align: right;
+  color: #d35400;
+  font-weight: bold;
+}
+
+.topping-item input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* ===== BOTONES ===== */
+.eliminar-pizza {
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  margin-top: 10px;
+  transition: all 0.3s;
+}
+
+.eliminar-pizza:hover {
+  background-color: #c0392b;
+}
+
+.floating-actions {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 30px;
+  z-index: 1000;
+}
+
+.fab-button {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  font-size: 24px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab-button:hover {
+  transform: scale(1.05);
+  background: #c0392b;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  #pizzas.pizzas-scrollable {
+    max-height: 50vh;
+  }
+  
+  .fab-button {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .datos-cliente-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .toppings-grid {
+    gap: 8px;
+  }
+  
+  .topping-item {
+    padding: 6px;
+    font-size: 1.1rem;
+  }
+  
+  .topping-price {
+    min-width: 60px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .toppings-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .pizza {
+    padding: 10px;
+  }
+}
+/* Resumen del pedido - Fuente igual a toppings */
+.resumen-pedido > p {
+  font-family: Verdana;
+  font-size: 1rem;
+  color: #333;
+}
+
+.resumen-pedido {
+  display: flex;               /* Cambiamos a flexbox */
+  align-items: center;         /* Centramos verticalmente */
+  gap: 15px;                   /* Espacio entre elementos */
+  background-color: #fff9f2;
+  border: 1px solid #e67e22;
+  padding: 12px;
+  border-radius: 8px;
+  font-family: Verdana;
+  flex-wrap: wrap;             /* Para responsive */
+}
+
+/* Ajustes para los textos del resumen */
+.resumen-pedido p {
+  margin: 0;                   /* Quitamos el margen vertical */
+  display: flex;               /* Para alinear label y valor */
+  align-items: center;
+  gap: 5px;                    /* Espacio entre label y valor */
+}
+
+/* Estilo para los valores numéricos */
+#resumen-cantidad, 
+#resumen-total {
+    font-weight: bold;
+    color: #e67e22;
+    margin-left: 5px;            /* Espacio después de los dos puntos */
+}
+
+/* Ajuste para ocupar todo el ancho */
+.campo-cliente .resumen-pedido {
+  width: 100%;                 /* Ocupa el 100% del contenedor padre */
+  box-sizing: border-box;      /* Incluye padding en el ancho total */
+  justify-content: space-between; /* Distribuye el espacio entre elementos */
+  margin-top: 10px;            /* Espacio superior consistente */
+}
+
+/* Opcional: Ajuste para pantallas pequeñas */
+@media (max-width: 600px) {
+  .campo-cliente .resumen-pedido {
+      flex-direction: row;     /* Mantenemos en fila incluso en móviles */
+      flex-wrap: wrap;         /* Permite saltos de línea si es necesario */
+  }
+}
+
+/* Botones flotantes - Añade esto: */
+.fab-cancel {
+  color: black;
+  background-color: #95a5a6 !important; /* Gris para diferenciar */
+}
+
+.fab-cancel:hover {
+  background-color: #7f8c8d !important;
+}
+
+
+
+/* Opcional: Efecto al cancelar */
+#cancelarPedidoBtn {
+  transition: transform 0.3s;
+}
+
+#cancelarPedidoBtn:hover {
+  transform: rotate(90deg);
+}
+
+.resumen-label {
+  font-family: 'Lugrasimo', cursive;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: bold;
+}
+.btn-procesar {
+  display: inline-block;
+  padding: 6px 12px;
+  background-color: rgba(81, 58, 38, 0.7);
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-procesar:hover {
+  background-color: #45a049;
+}
+
+
 
 /* ==================== */
 /*    Editar_Usuarios   */
@@ -688,4 +1358,43 @@ input:valid {
   color: white;
   text-align: center;
   font-size: 1rem;
+}
+
+/* ==================== */
+/*  scrollManager.css   */
+/* ==================== */
+
+/* Estilos base para el ScrollManager */
+.scroll-container {
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.scroll-item {
+  position: relative;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.scroll-item.active {
+  border-left: 4px solid #e74c3c;
+  background-color: #fff9f9;
+}
+
+/* Estilos para la barra de scroll (ya incluidos en JS pero puedes sobrescribir aquí) */
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: #e74c3c;
+  border-radius: 4px;
 }
