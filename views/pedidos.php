@@ -63,7 +63,7 @@ $toppings = $conn->query("SELECT * FROM toppings")->fetchAll(PDO::FETCH_ASSOC);
                     
                             <div class="menu-navegacion">
                                 <ul>
-                                    <li><a href="<?php echo BASE_URL; ?>/views/index.php">Regresar</a></li> 
+                                    <li><a href="<?php echo BASE_URL; ?>/views/index.php">Home</a></li> 
                                     <li><a href="#" id="btnNuevo">Nuevo Pedido</a></li> 
                                     <li><a href="#" id="btnLista">Ver Lista</a></li> 
                                 </ul>

@@ -144,6 +144,12 @@ ventas
 
 
 # Estructura
+## Estructura Actual del Proyecto
+
+```bash
+# Ejecutar este comando desde la raíz del proyecto para ver la estructura actual
+find . -type f | grep -v 'node_modules' | grep -v 'vendor' | grep -v '.git' | sort
+
 var/www/html/proyecto/          # Directorio raíz del proyecto
 │
 ├── public/  

@@ -62,6 +62,70 @@ p {
 }
 
 /* ====================== */
+/*    notificaciones.php  */
+/* ====================== */
+ 
+   
+    .mensaje-container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .mensaje-header {
+        font-weight: bold;
+        color: #e74c3c;
+        margin-bottom: 10px;
+        font-size: 1.2em;
+    }
+    .mensaje-content {
+        white-space: pre-wrap;
+        font-family: 'Courier New', monospace;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border-radius: 5px;
+        border-left: 4px solid #e74c3c;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    .spinner {
+        border: 5px solid #f3f3f3;
+        border-top: 5px solid #e74c3c;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+    }
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .redireccionando {
+        text-align: center;
+        margin-top: 20px;
+        font-style: italic;
+    }
+    .btn-continuar {
+        background-color: #e74c3c;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 1em;
+        margin-top: 20px;
+        display: block;
+        width: 200px;
+        margin: 20px auto;
+    }
+    .btn-continuar:hover {
+        background-color: #c0392b;
+    }
+    
+
+/* ====================== */
 /*    Ventas.php  */
 /* ====================== */
 .contenedor_ventas {

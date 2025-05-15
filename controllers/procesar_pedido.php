@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (!$cliente) {
             // Crear nuevo cliente
-            $stmt = $conn->prepare("INSERT INTO clientes (nombre, telefono) VALUES (?, ?)");
-            $stmt->execute([$nombre_cliente, $telefono_cliente]);
+            $stmt = $conn->prepare("INSERT INTO clientes (nombre, telefono, direccion) VALUES (?, ?, ?)");
+            $stmt->execute([$nombre_cliente, $telefono_cliente, '']); // Insertar cadena vacía para la dirección
             $cliente_id = $conn->lastInsertId();
         } else {
             $cliente_id = $cliente['id'];
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([$cliente_id, $total_pedido]);
         $pedido_id = $conn->lastInsertId();
 
-        // Procesar cada pizza en el pedido
+        // Procesar cada pizza en el pedido (sin cambios)
         foreach ($pizzas as $pizza) {
             $pizza_id = $pizza['id'];
             $cantidad = $pizza['cantidad'];
@@ -76,15 +76,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
 
-        // Actualizar el total del pedido
+        // Actualizar el total del pedido (sin cambios)
         $stmt = $conn->prepare("UPDATE pedidos SET total = ? WHERE id = ?");
         $stmt->execute([$total_pedido, $pedido_id]);
 
-        // Redirigir al resumen del pedido
+        // Redirigir al resumen del pedido (sin cambios)
         header('Location: ' . BASE_URL . '/views/resumen_pedido.php?id=' . $pedido_id);
         exit();
     } catch (PDOException $e) {
-        // Mostrar un mensaje de error detallado
+        // Mostrar un mensaje de error detallado (sin cambios)
         echo "<h1>Error al procesar el pedido</h1>";
         echo "<p>Por favor, intenta nuevamente. Si el problema persiste, contacta al soporte.</p>";
         echo "<p>Detalles del error: " . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . "</p>";

@@ -46,37 +46,75 @@ $pedidos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Pedidos Procesados del Día</title>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos procesados</title>
+    <link rel="stylesheet" href="<?php echo CSS_URL; ?>/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lugrasimo&display=swap" rel="stylesheet">
+    <style>
+    .contenedor_tabla {
+        background-image: url('<?php echo IMG_URL; ?>/backgrounds/background_sm.jpg');
+    }
+    .tabla { 
+        background-image: url('<?php echo IMG_URL; ?>/backgrounds/nota_sf.png');
+    }
+     </style>
 </head>
 <body>
-    <h1>Pedidos Procesados del Día</h1>
+    <div class="contenedor_tabla">
+        <div class="tabla">
+             <div class="titulo_font">
+                <h1>Ventas del Día</h1>
+                <p>Bienvenido, <?php echo htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8'); ?>!</p>
+                   <div class="menu-navegacion">
+                                <ul>
+                                    <li><a href="<?php echo BASE_URL; ?>/views/index.php">Home</a></li> 
+                                    <li><a href="<?php echo BASE_URL; ?>/views/pedidos.php">Pedidos</a></li> 
+                                </ul>
+                  </div>
+
+                    <?php if (isset($error)): ?>
+                        <div class="alert alert-error"><?php echo $error; ?></div>
+                    <?php endif; ?>
+             </div>  
+                <div class="lista-pedidos" id="pedidos-container">
     <table border="1">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Teléfono</th>
-                <th>Fecha Pedido</th>
                 <th>Total</th>
                 <th>Repartidor</th>
                 <th>Pizzero</th>
-                <th>Fecha Venta</th>
             </tr>
         </thead>
         <tbody>
-        <a href="pedidos.php">Ver Pedidos Pendientes</a>
             <?php foreach ($pedidos as $pedido): ?>
                 <tr>
                     <td><?php echo htmlspecialchars($pedido['id'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($pedido['telefono_cliente'], ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($pedido['fecha_pedido'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td>$<?php echo htmlspecialchars($pedido['total'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($pedido['nombre_delivery'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($pedido['nombre_pizzero'], ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td><?php echo htmlspecialchars($pedido['fecha_venta'], ENT_QUOTES, 'UTF-8'); ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+</div>                   
+        </div>                            
+    </div>
+    <script src="<?php echo JS_URL; ?>/scrollManager.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const scrollManagerPedidos = new ScrollManager({
+      containerSelector: '#pedidos-container',
+      itemSelector: 'tbody tr',
+      maxHeight: 50, // Ajusta la altura máxima según necesites (en vh)
+      autoScroll: false, // No necesitamos auto-scroll en la carga inicial
+      smoothScroll: true, // Opcional: para un scroll suave
+      scrollbarColor: '#3498db' // Opcional: cambia el color de la barra de scroll
+    });
+  });
+</script>                              
 </body>
 </html>

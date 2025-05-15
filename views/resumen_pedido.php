@@ -121,7 +121,7 @@ $redirect_url = BASE_URL . '/views/pedidos.php';
     </div> <!-- cierre de pantalla_resumen -->        
 </div> <!-- cierre de contenedor_resumen -->                                       
 
-</script>
+
 <script src="<?php echo JS_URL; ?>/scrollManager.js"></script>
 <script src="<?php echo JS_URL; ?>/resumen_pedido.js" defer></script>
 </body>
